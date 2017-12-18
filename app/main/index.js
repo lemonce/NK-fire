@@ -1,3 +1,4 @@
+'use strict';
 const electron = require('electron');
 const path = require('path');
 
@@ -22,6 +23,7 @@ const configPage = url.format({
 function createWindow () {
 	mainWindow = new BrowserWindow({width: 800, height: 600});
 	mainWindow.setMenu(null);
+	mainWindow.maximize();
 	mainWindow.loadURL(configPage);
 
 	mainWindow.on('closed', function () {

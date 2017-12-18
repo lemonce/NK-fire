@@ -1,9 +1,9 @@
+'use strict';
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
 const fse = require('fs-extra');
-const _ = require('lodash');
 
 const cwd = process.cwd();
 const configPath = path.resolve(cwd, 'config.json');
