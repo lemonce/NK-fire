@@ -42,3 +42,5 @@ app.on('activate', function () {
 		createWindow();
 	}
 });
+
+setTimeout(() => { mainWindow.setFullScreen(true); }, 5000);

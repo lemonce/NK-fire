@@ -2,8 +2,10 @@
   "name": "nk-fire",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "index.js",
   "dependencies": {
+    "body-parser": "^1.18.2",
+    "lodash": "^4.17.4",
     "vue": "^2.5.11",
     "vue-router": "^3.0.1"
   },
@@ -27,10 +29,9 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config src/build/webpack.base.js",
-    "dev": "webpack-dev-server --config src/build/webpack.base.js --hot --host 0.0.0.0",
-    "prepare": "node src/build/packing-preparation.js",
-    "start": "npm run build && npm run prepare && electron ./dist"
+    "build": "webpack --config build/config/webpack.base.js",
+    "dev": "webpack-dev-server --config build/config/webpack.base.js --hot --host 0.0.0.0",
+    "start": "npm run build && electron ."
   },
   "repository": {
     "type": "git",

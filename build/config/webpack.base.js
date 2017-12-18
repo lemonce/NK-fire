@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const cwd = process.cwd();
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const babelLoader = {
@@ -17,15 +18,15 @@ const babelLoader = {
 
 module.exports = {
 	entry: {
-		app: path.resolve(__dirname, '../../app/index.js')
+		app: path.resolve(cwd, 'app/viewer/index.js')
 	},
 	output: {
-		path: path.resolve(__dirname, '../../dist'),
+		path: path.resolve(cwd, 'dist'),
 		publicPath: './',
 		filename: '[name].js'
 	},
 	devServer: {
-		contentBase: path.resolve(__dirname, '../../dist'),
+		contentBase: path.resolve(cwd, 'dist'),
 		port: 2000,
 		hot: true
 	},
@@ -64,7 +65,7 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			title: 'Pagination',
 			filename: 'index.html',
-			template: path.resolve(__dirname, './template.html')
+			template: path.resolve(__dirname, './template/template.html')
 		})
 	]
 };
