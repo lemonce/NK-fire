@@ -28,8 +28,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config src/build/webpack.base.js",
-    "start": "webpack-dev-server --config src/build/webpack.base.js --hot --host 0.0.0.0",
-    "e": "electron ./dist"
+    "dev": "webpack-dev-server --config src/build/webpack.base.js --hot --host 0.0.0.0",
+    "prepare": "node src/build/packing-preparation.js",
+    "start": "npm run build && npm run prepare && electron ./dist"
   },
   "repository": {
     "type": "git",

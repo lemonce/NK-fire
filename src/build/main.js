@@ -9,7 +9,7 @@ const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 const url = require('url');
 
-expressApp.use(express.static('.'));
+expressApp.use(express.static(__dirname));
 
 http.createServer(expressApp).listen(8888);
 
