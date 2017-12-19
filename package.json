@@ -1,5 +1,6 @@
 {
   "name": "nk-fire",
+  "productName": "Lemonce Display System",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -31,9 +32,11 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config build/config/webpack.base.js",
+    "build": "webpack --config build/config/webpack.base.js --progress",
     "dev": "webpack-dev-server --config build/config/webpack.base.js --hot --host 0.0.0.0",
-    "package": "electron-packager ./ nk-fire --asar=true --platform=win32 --arch=ia32 --out ./OutApp --version 1.7.8 --overwrite",
+    "pack:windows": "node packager/win32.js",
+    "pack:setup": "node packager/inno.js",
+    "release": "npm run build && npm run pack:windows && npm run pack:setup",
     "start": "npm run build && electron ."
   },
   "repository": {
