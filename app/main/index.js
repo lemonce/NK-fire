@@ -1,12 +1,23 @@
 'use strict';
 const electron = require('electron');
 const path = require('path');
+const fse = require('fs-extra');
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const cwd = process.cwd();
-const configPath = path.resolve(cwd, 'config.json');
-const config = require(configPath);
+const configJsonPath = path.resolve(cwd, 'config.json');
+const configPagePath = path.resolve(__dirname, '../../dist');
+
+if (!fse.existsSync(configJsonPath)) {
+	fse.outputJsonSync(configJsonPath, {
+		staticPath: configPagePath,
+		port: 8888
+	});
+}
+
+
+const config = require(configJsonPath);
 
 const url = require('url');
 

@@ -6,9 +6,9 @@ const http = require('http');
 const fse = require('fs-extra');
 
 const cwd = process.cwd();
-const configPath = path.resolve(cwd, 'config.json');
-const configPagePath = path.resolve(cwd, 'dist');
-const config = require(configPath);
+const configJsonPath = path.resolve(cwd, 'config.json');
+const configPagePath = path.resolve(__dirname, '../../dist');
+const config = require(configJsonPath);
 
 function getStaticPath(req, res) {
 	res.status(200).json(config.staticPath);
@@ -16,7 +16,7 @@ function getStaticPath(req, res) {
 
 function modifyStaticPath(req, res) {
 	config.staticPath = req.body.path;
-	fse.outputJsonSync(configPath, config);
+	fse.outputJsonSync(configJsonPath, config);
 	res.status(200).json('done');
 	restartServer();
 }

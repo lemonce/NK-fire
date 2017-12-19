@@ -22,7 +22,7 @@ module.exports = {
 	},
 	output: {
 		path: path.resolve(cwd, 'dist'),
-		publicPath: './',
+		publicPath: '/config/',
 		filename: '[name].js'
 	},
 	devServer: {
