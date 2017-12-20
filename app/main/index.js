@@ -1,5 +1,6 @@
 'use strict';
 const electron = require('electron');
+const { dialog } = electron;
 const path = require('path');
 const fse = require('fs-extra');
 
@@ -21,12 +22,18 @@ const config = require(configJsonPath);
 
 const url = require('url');
 
-require('../server');
+const { restart } = require('../server');
 
 let mainWindow;
 
 const configPage = url.format({
 	pathname: `localhost:${config.port}/config`,
+	protocol: 'http:',
+	slashes: true
+});
+
+const staticPage = url.format({
+	pathname: `localhost:${config.port}`,
 	protocol: 'http:',
 	slashes: true
 });
@@ -54,6 +61,20 @@ function createWindow () {
 
 	webContents.on('devtools-opened', () => devToolsOpened = true);
 	webContents.on('devtools-closed', () => devToolsOpened = false);
+
+	webContents.on('before-input-event', (event, input) => {
+		if (input.key === 'F11' && input.type === 'keyDown') {
+			dialog.showOpenDialog({defaultPath: cwd}, filePaths => {
+				const reg = /^(.*)\\[^\\]*$/;
+				config.staticPath = filePaths[0].replace(reg, '$1');
+				fse.outputJsonSync(configJsonPath, config);
+				restart();
+
+				mainWindow.loadURL(staticPage);
+				mainWindow.setFullScreen(true);
+			});
+		}
+	});	
 }
 
 app.on('ready', createWindow);

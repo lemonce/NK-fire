@@ -8,7 +8,7 @@ const fse = require('fs-extra');
 const cwd = process.cwd();
 const configJsonPath = path.resolve(cwd, 'config.json');
 const configPagePath = path.resolve(__dirname, '../../dist');
-const config = require(configJsonPath);
+let config = require(configJsonPath);
 
 function getStaticPath(req, res) {
 	res.status(200).json(config.staticPath);
@@ -48,16 +48,17 @@ function destoryAllSocket() {
 	});
 }
 
-function restartServer() {
+const restartServer = exports.restart = function restartServer() {
 	destoryAllSocket();
 	server && server.close();
 	server = null;
 
+	config = require(configJsonPath);
 	server = http.createServer(appFactory(config.staticPath)).listen(config.port);
 	server.on('connection', socket => {
 		socketPool.push(socket);
 		socket.once('close', () => removeSocket(socket));
 	});
-}
+};
 
 restartServer();
