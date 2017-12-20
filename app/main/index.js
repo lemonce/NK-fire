@@ -1,14 +1,16 @@
 'use strict';
 const electron = require('electron');
-const { dialog } = electron;
 const path = require('path');
 const fse = require('fs-extra');
+const url = require('url');
+const { spawn } = require('child_process');
 
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
+const { app, dialog, BrowserWindow } = electron;
+
 const cwd = process.cwd();
 const configJsonPath = path.resolve(cwd, 'config.json');
 const configPagePath = path.resolve(__dirname, '../../dist');
+const { devServer } = require('../../build/config/webpack.base');
 
 if (!fse.existsSync(configJsonPath)) {
 	fse.outputJsonSync(configJsonPath, {
@@ -17,17 +19,20 @@ if (!fse.existsSync(configJsonPath)) {
 	});
 }
 
-
 const config = require(configJsonPath);
+let port = config.port;
 
-const url = require('url');
+if (process.argv.splice(2) == 'dev') {
+	port = devServer.port;
+	spawn('npm.cmd', ['run', 'dev-server']);
+}
 
 const { restart } = require('../server');
 
 let mainWindow;
 
 const configPage = url.format({
-	pathname: `localhost:${config.port}/config`,
+	pathname: `localhost:${port}/config/`,
 	protocol: 'http:',
 	slashes: true
 });
@@ -37,6 +42,19 @@ const staticPage = url.format({
 	protocol: 'http:',
 	slashes: true
 });
+
+function showSelectPathDialog() {
+	dialog.showOpenDialog({defaultPath: cwd}, filePaths => {
+		if (!filePaths) {
+			return;
+		}
+
+		const reg = /^(.*)\\[^\\]*$/;
+		config.staticPath = filePaths[0].replace(reg, '$1');
+		fse.outputJsonSync(configJsonPath, config);
+		restart();
+	});
+}
 
 function createWindow () {
 	mainWindow = new BrowserWindow({width: 800, height: 600});
@@ -65,13 +83,16 @@ function createWindow () {
 	webContents.on('before-input-event', (event, input) => {
 		if (input.key === 'F11' && input.type === 'keyDown') {
 			dialog.showOpenDialog({defaultPath: cwd}, filePaths => {
+				if (!filePaths) {
+					return;
+				}
+
 				const reg = /^(.*)\\[^\\]*$/;
 				config.staticPath = filePaths[0].replace(reg, '$1');
 				fse.outputJsonSync(configJsonPath, config);
 				restart();
 
 				mainWindow.loadURL(staticPage);
-				mainWindow.setFullScreen(true);
 			});
 		}
 	});	
@@ -89,4 +110,13 @@ app.on('activate', function () {
 	if (mainWindow === null) {
 		createWindow();
 	}
+});
+
+app.on('select-preview-path', () => {
+	showSelectPathDialog();
+});
+
+app.on('confirm-static-path', () => {
+	mainWindow.loadURL(staticPage);
+	mainWindow.setFullScreen(true);
 });

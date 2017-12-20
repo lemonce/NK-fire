@@ -3,6 +3,7 @@
 const path = require('path');
 const cwd = process.cwd();
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const httpPort = require(path.resolve(cwd, 'config.json')).port;
 
 const babelLoader = {
 	loader: 'babel-loader',
@@ -28,7 +29,10 @@ module.exports = {
 	devServer: {
 		contentBase: path.resolve(cwd, 'dist'),
 		port: 2000,
-		hot: true
+		hot: true,
+		proxy: {
+			'/api': `http://localhost:${httpPort}`,
+		}
 	},
 	module: {
 		rules: [

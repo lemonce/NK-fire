@@ -3,22 +3,33 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
-const fse = require('fs-extra');
+const router = new express.Router();
+
+const electron = require('electron');
+const app = electron.app;
 
 const cwd = process.cwd();
 const configJsonPath = path.resolve(cwd, 'config.json');
 const configPagePath = path.resolve(__dirname, '../../dist');
 let config = require(configJsonPath);
 
+router.get('/config/staticPath', getStaticPath);
+
+router.get('/config/previewPath', emitterPreviewEvent);
+router.put('/config/staticPath', emitterConfirmEvent);
+
 function getStaticPath(req, res) {
 	res.status(200).json(config.staticPath);
 }
 
-function modifyStaticPath(req, res) {
-	config.staticPath = req.body.path;
-	fse.outputJsonSync(configJsonPath, config);
+function emitterConfirmEvent(req, res) {
+	app.emit('confirm-static-path');
 	res.status(200).json('done');
-	restartServer();
+}
+
+function emitterPreviewEvent(req, res) {
+	app.emit('select-preview-path');
+	res.status(200).json('done');
 }
 
 function appFactory(staticPath) {
@@ -26,10 +37,10 @@ function appFactory(staticPath) {
 
 	app.use(bodyParser.json({ type: '*/json', limit: '32mb' }));
 	app.use(bodyParser.urlencoded({ extended: false }));
+	
 	app.use('/config/', express.static(configPagePath));
 	app.use('/', express.static(staticPath || configPagePath));
-	app.put('/config/staticPath', modifyStaticPath);
-	app.get('/config/staticPath', getStaticPath);
+	app.use('/api', router);
 
 	return app;
 }
