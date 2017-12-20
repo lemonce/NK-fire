@@ -3,7 +3,7 @@
 const path = require('path');
 const cwd = process.cwd();
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const httpPort = require(path.resolve(cwd, 'config.json')).port;
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const babelLoader = {
 	loader: 'babel-loader',
@@ -47,10 +47,11 @@ module.exports = {
 			},
 			{
 				test: /\.css$/,
-				use: [
-					'style-loader',
-					'css-loader'
-				]
+				loader: ExtractTextPlugin.extract(['css-loader'])
+			},
+			{
+				test: /\.less$/,
+				loader: ExtractTextPlugin.extract(['css-loader', 'less-loader'])
 			},
 			{
 				test: /\.js$/,
@@ -70,6 +71,7 @@ module.exports = {
 			title: 'Pagination',
 			filename: 'index.html',
 			template: path.resolve(__dirname, './template/template.html')
-		})
+		}),
+		new ExtractTextPlugin('styles.[hash:5].css')
 	]
 };

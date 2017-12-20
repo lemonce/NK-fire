@@ -96,7 +96,7 @@ function createWindow () {
 			handler.call('server.restart');
 			mainWindow.loadURL(staticPage);
 		}
-	});	
+	});
 }
 
 app.on('ready', createWindow);
