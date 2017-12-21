@@ -5,9 +5,7 @@ const path = require('path');
 const http = require('http');
 const router = new express.Router();
 
-const electron = require('electron');
-const app = electron.app;
-
+const handler = require('../main/handler');
 const cwd = process.cwd();
 const configJsonPath = path.resolve(cwd, 'config.json');
 const configPagePath = path.resolve(__dirname, '../../dist');
@@ -15,21 +13,22 @@ let config = require(configJsonPath);
 
 router.get('/config/staticPath', getStaticPath);
 
-router.get('/config/previewPath', emitterPreviewEvent);
-router.put('/config/staticPath', emitterConfirmEvent);
+router.get('/config/previewPath', selectPreviewPath);
+router.put('/config/staticPath', confirmStaticPath);
 
 function getStaticPath(req, res) {
 	res.status(200).json(config.staticPath);
 }
 
-function emitterConfirmEvent(req, res) {
-	app.emit('confirm-static-path');
+function confirmStaticPath(req, res) {
+	handler.get('confirm-static-path')();
 	res.status(200).json('done');
 }
 
-function emitterPreviewEvent(req, res) {
-	app.emit('select-preview-path');
-	res.status(200).json('done');
+function selectPreviewPath(req, res) {
+	const path = handler.get('select-preview-path')();
+	res.status(200).json(path);
+	restartServer();
 }
 
 function appFactory(staticPath) {

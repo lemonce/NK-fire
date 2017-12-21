@@ -7,6 +7,7 @@ const { spawn } = require('child_process');
 
 const { app, dialog, BrowserWindow } = electron;
 
+const handler = require('./handler');
 const cwd = process.cwd();
 const configJsonPath = path.resolve(cwd, 'config.json');
 const configPagePath = path.resolve(__dirname, '../../dist');
@@ -22,9 +23,12 @@ if (!fse.existsSync(configJsonPath)) {
 const config = require(configJsonPath);
 let port = config.port;
 
-if (process.argv.splice(2) == 'dev') {
+function startWebpackDevServer() {
 	port = devServer.port;
 	spawn('npm.cmd', ['run', 'dev-server']);
+}
+if (process.argv.splice(2) == 'dev') {
+	startWebpackDevServer();
 }
 
 const { restart } = require('../server');
@@ -43,17 +47,18 @@ const staticPage = url.format({
 	slashes: true
 });
 
-function showSelectPathDialog() {
-	dialog.showOpenDialog({defaultPath: cwd}, filePaths => {
-		if (!filePaths) {
-			return;
-		}
+function selectPath() {
+	const filePaths = dialog.showOpenDialog({defaultPath: cwd});
+	if (!filePaths) {
+		return config.staticPath;
+	}
 
-		const reg = /^(.*)\\[^\\]*$/;
-		config.staticPath = filePaths[0].replace(reg, '$1');
-		fse.outputJsonSync(configJsonPath, config);
-		restart();
-	});
+	const reg = /^(.*)\\[^\\]*$/;
+	const result = filePaths[0].replace(reg, '$1');
+	config.staticPath = result;
+	fse.outputJsonSync(configJsonPath, config);
+
+	return result;
 }
 
 function createWindow () {
@@ -82,18 +87,9 @@ function createWindow () {
 
 	webContents.on('before-input-event', (event, input) => {
 		if (input.key === 'F11' && input.type === 'keyDown') {
-			dialog.showOpenDialog({defaultPath: cwd}, filePaths => {
-				if (!filePaths) {
-					return;
-				}
-
-				const reg = /^(.*)\\[^\\]*$/;
-				config.staticPath = filePaths[0].replace(reg, '$1');
-				fse.outputJsonSync(configJsonPath, config);
-				restart();
-
-				mainWindow.loadURL(staticPage);
-			});
+			selectPath();
+			restart();
+			mainWindow.loadURL(staticPage);
 		}
 	});	
 }
@@ -112,11 +108,9 @@ app.on('activate', function () {
 	}
 });
 
-app.on('select-preview-path', () => {
-	showSelectPathDialog();
-});
+handler.define('select-preview-path', selectPath);
 
-app.on('confirm-static-path', () => {
+handler.define('confirm-static-path', function () {
 	mainWindow.loadURL(staticPage);
 	mainWindow.setFullScreen(true);
 });
