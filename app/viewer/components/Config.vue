@@ -1,22 +1,28 @@
 <template>
 <div id="workbench">
 	<div id="menu-container">
-		<app-menu></app-menu>
+		<app-menu @refresh="reShow()"></app-menu>
 
 	</div>
 	<div id="view-container">
-		<show></show>
+		<webview id="preview" src="http://localhost:8888/"></webview>
 	</div>
 </div>
 </template>
 
 <script>
 import AppMenu from './Menu.vue';
-import Show from './Show.vue';
 
 export default {
 	name: 'home',
-	components: { AppMenu, Show }
+	components: { AppMenu },
+	methods: {
+		reShow() {
+			const webview = document.querySelector('webview');
+			
+			webview.reload();
+		}
+	}
 }
 </script>
 
@@ -47,5 +53,10 @@ export default {
 		overflow: hidden;
 		background: #FFF;
 	}
+}
+#preview {
+	width: 100%;
+	height: 100%;
+	display: inline-flex;
 }
 </style>

@@ -43,7 +43,10 @@ export default {
 	},
 	methods: {
 		getPath() {
-			return axios.get('/api/config/previewPath').then(({data}) => this.filePath = data);
+			axios.get('/api/config/previewPath').then(({data}) => {
+				this.filePath = data;
+				this.$emit('refresh');
+			});
 		},
 		confirm() {
 			return axios.put('/api/config/staticPath');
