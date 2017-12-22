@@ -24,8 +24,10 @@
 					</span>
 				</div>
 			</div>
+			<div class="col-sm-2">
+				<h3 style="text-align:left; margin:5px 0; color: yellow">{{message}}</h3>
+			</div>
 		</div>
-
 		<keyboard
 			v-model="password"
 			@input="changed"
@@ -47,6 +49,7 @@ export default {
 	data() {
 		return {
 			password: '',
+			message: ''
 		}
 	},
 	methods: {
@@ -61,8 +64,12 @@ export default {
 			}).then( response => {
 				this.$router.push('/config');
 			}).catch( err => {
-				console.log(err);
-				
+				console.log(err.response.status);
+				if ( err.response.status === 401 ) {
+					return this.message = '密码错误！'
+				}
+
+				return this.message = '系统错误'
 			})
 		}
 	},
