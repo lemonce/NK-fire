@@ -60,3 +60,4 @@ typings/
 /dist
 /config.json
 /output
+/ldslib.dll

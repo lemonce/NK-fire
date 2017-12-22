@@ -7,10 +7,11 @@ const { spawn } = require('child_process');
 
 const { app, dialog, BrowserWindow } = electron;
 
-const handler = require('./handler');
+const handler = require('../handler');
 const cwd = process.cwd();
 const configJsonPath = path.resolve(cwd, 'config.json');
 const configPagePath = path.resolve(__dirname, '../../dist');
+const passwordPath = path.resolve(cwd, 'ldslib.dll');
 const { devServer } = require('../../build/config/webpack.base');
 
 if (!fse.existsSync(configJsonPath)) {
@@ -18,6 +19,10 @@ if (!fse.existsSync(configJsonPath)) {
 		staticPath: configPagePath,
 		port: 8888
 	});
+}
+
+if (!fse.existsSync(passwordPath)) {
+	fse.writeFileSync(passwordPath, '88888888', { encoding: 'base64' });
 }
 
 const config = require(configJsonPath);
@@ -31,7 +36,7 @@ if (process.argv.splice(2) == 'dev') {
 	startWebpackDevServer();
 }
 
-const { restart } = require('../server');
+require('../server');
 
 let mainWindow;
 
@@ -88,7 +93,7 @@ function createWindow () {
 	webContents.on('before-input-event', (event, input) => {
 		if (input.key === 'F11' && input.type === 'keyDown') {
 			selectPath();
-			restart();
+			handler.call('server.restart');
 			mainWindow.loadURL(staticPage);
 		}
 	});	
