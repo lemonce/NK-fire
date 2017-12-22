@@ -17,11 +17,10 @@
 						required
 						autofocus>
 					<span class="input-group-btn">
-						<router-link class="btn btn-info"
-							to="/config"
-							tag="a"
+						<button class="btn btn-info"
 							:disabled="password === ''"
-							>进入</router-link>
+							@click.prevent="login()"
+							>进入</button>
 					</span>
 				</div>
 			</div>
@@ -38,6 +37,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import keyboard from 'vue-keyboard';
 import background from '../background.js';
 
@@ -46,11 +46,8 @@ export default {
 	components: { keyboard },
 	data() {
 		return {
-			password: ''
+			password: '',
 		}
-	},
-	mounted(){
-		return CANVAS = document.getElementById('canvas');
 	},
 	methods: {
 		changed(value) {
@@ -58,7 +55,17 @@ export default {
 
 			console.log('Value ' + value);
 		},
-	}
+		login() {
+			axios.post('/api/login', {
+				password: this.password
+			}).then( response => {
+				this.$router.push('/config');
+			}).catch( err => {
+				console.log(err);
+				
+			})
+		}
+	},
 }
 </script>
 

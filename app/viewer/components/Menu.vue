@@ -1,55 +1,67 @@
 <template>
-<div id="menu">
-	<a :href="fileName">{{fileName}}</a>
-	<a href="javascript:;" class="file-path btn btn-info">选择文件
-		<input type="file" id="select-file" @change="getFullPath()">
+<div id="menu" class="container-fluid">
+	<div class="panel panel-default config-panel">
+		<div class="panel-heading">
+			版式
+		</div>
+		<div class="panel-body">
+			<p>路径：{{filePath}}</p>
+			<a class="btn btn-info pull-right"
+				@click="getPath()">选择文件</a>
+		</div>
+	</div>
 
-	</a>
+	<div class="panel panel-default config-panel" hidden>
+		<div class="panel-heading">
+			数据源
+		</div>
+		<div class="panel-body">
+			<p></p>
+			<a class="btn btn-info pull-right">选择文件</a>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-12">
+			<a class="btn btn-success confirm-btn"
+				@click="confirm()">开始展示</a>
+
+		</div>
+	</div>
 </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
 	name: 'app-menu',
 	data() {
 		return {
-			fileName: ''
+			filePath: '',
 		}
-
 	},
 	methods: {
-		getFullPath() {
-			// return this.fileName = document.querySelector('#select-file').value;
-			let url;
-
-			if (navigator.userAgent.indexOf('MSIE') >= 1) {
-				url = document.querySelector('#select-file').value;
-			} else if (navigator.userAgent.indexOf('Firefox') > 0) {
-				url = window.URL.createObjectURL(document.querySelector('#select-file').files.item(0));
-			} else if (navigator.userAgent.indexOf('Chrome') > 0) {
-				url = window.URL.createObjectURL(document.querySelector('#select-file').files.item(0));
-			}
-
-			return this.fileName = url;
+		getPath() {
+			return axios.get('/api/config/previewPath').then(({data}) => this.filePath = data);
+		},
+		confirm() {
+			return axios.put('/api/config/staticPath');
 		}
 	}
 }
 </script>
 
 <style lang="less">
-#menu {
-	a {
-		display: inline-block;
+.panel.config-panel {
+	margin-top: 20px;
+
+	.panel-body p {
+		word-break: break-all;
 	}
-	.file-path {
-		position: relative;
-		
-		input {
-			position: absolute;
-			right: 0;
-			top: 0;
-			opacity: 0;
-		}
-	}
+}
+.confirm-btn {
+	width: 100%;
+	display: inline-block;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-	<webview id="foo" src="http://localhost:4000/"></webview>
+	<webview id="foo" src="http://localhost:8888/"></webview>
 </template>
 
 <style lang="less">

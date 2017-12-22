@@ -4,6 +4,7 @@ const path = require('path');
 const cwd = process.cwd();
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const httpPort = require(path.resolve(cwd, 'config.json')).port;
 
 const babelLoader = {
 	loader: 'babel-loader',

@@ -5,18 +5,18 @@
 
 	</div>
 	<div id="view-container">
-		<router-view></router-view>
-		<webview id="foo" src="https://www.github.com/" style="display:inline-flex; width:640px; height:480px"></webview>
+		<show></show>
 	</div>
 </div>
 </template>
 
 <script>
 import AppMenu from './Menu.vue';
+import Show from './Show.vue';
 
 export default {
 	name: 'home',
-	components: { AppMenu }
+	components: { AppMenu, Show }
 }
 </script>
 
@@ -45,6 +45,7 @@ export default {
 		bottom: 0;
 		left: 300px;
 		overflow: hidden;
+		background: #FFF;
 	}
 }
 </style>
