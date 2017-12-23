@@ -12,58 +12,20 @@ const cwd = process.cwd();
 const configJsonPath = path.resolve(cwd, 'config.json');
 const configPagePath = path.resolve(__dirname, '../../dist');
 const passwordPath = path.resolve(cwd, 'ldslib.dll');
-const { devServer } = require('../../build/config/webpack.base');
 
-if (!fse.existsSync(configJsonPath)) {
-	fse.outputJsonSync(configJsonPath, {
-		staticPath: configPagePath,
-		port: 8888
-	});
-}
-
-if (!fse.existsSync(passwordPath)) {
-	fse.writeFileSync(passwordPath, '88888888', { encoding: 'base64' });
-}
-
-const config = require(configJsonPath);
-let port = config.port;
-
-function startWebpackDevServer() {
-	port = devServer.port;
-	spawn('npm.cmd', ['run', 'dev-server']);
-}
-if (process.argv.splice(2) == 'dev') {
-	startWebpackDevServer();
-}
-
-require('../server');
-
-let mainWindow;
-
-const configPage = url.format({
-	pathname: `localhost:${port}/config/`,
-	protocol: 'http:',
-	slashes: true
-});
-
-const staticPage = url.format({
-	pathname: `localhost:${config.port}`,
-	protocol: 'http:',
-	slashes: true
-});
-
-function selectPath() {
-	const filePaths = dialog.showOpenDialog({defaultPath: cwd});
-	if (!filePaths) {
-		return config.staticPath;
+function checkFiles() {
+	if (!fse.existsSync(configJsonPath)) {
+		fse.outputJsonSync(configJsonPath, {
+			productName: '南开消防支队党组织生活公开平台',
+			staticPath: configPagePath,
+			httpPort: 8888,
+			devPort: 2000
+		});
 	}
-
-	const reg = /^(.*)\\[^\\]*$/;
-	const result = filePaths[0].replace(reg, '$1');
-	config.staticPath = result;
-	fse.outputJsonSync(configJsonPath, config);
-
-	return result;
+	
+	if (!fse.existsSync(passwordPath)) {
+		fse.writeFileSync(passwordPath, '88888888', { encoding: 'utf8' });
+	}
 }
 
 function createWindow () {
@@ -98,6 +60,52 @@ function createWindow () {
 		}
 	});
 }
+
+function selectPath() {
+	const filePaths = dialog.showOpenDialog({defaultPath: cwd});
+	if (!filePaths) {
+		return config.staticPath;
+	}
+
+	const reg = /^(.*)\\[^\\]*$/;
+	const result = filePaths[0].replace(reg, '$1');
+	config.staticPath = result;
+	fse.outputJsonSync(configJsonPath, config);
+
+	return result;
+}
+
+function startWebpackDevServer() {
+	port = config.devPort;
+	spawn('npm.cmd', ['run', 'dev-server']);
+}
+
+
+
+checkFiles();
+
+const config = require(configJsonPath);
+let port = config.httpPort;
+
+if (process.argv.splice(2) == 'dev') {
+	startWebpackDevServer();
+}
+
+require('../server');
+
+let mainWindow;
+
+const configPage = url.format({
+	pathname: `localhost:${port}/config/`,
+	protocol: 'http:',
+	slashes: true
+});
+
+const staticPage = url.format({
+	pathname: `localhost:${config.httpPort}`,
+	protocol: 'http:',
+	slashes: true
+});
 
 app.on('ready', createWindow);
 

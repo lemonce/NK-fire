@@ -9,8 +9,8 @@ const passwordPath = path.resolve(cwd, 'ldslib.dll');
 const router = new express.Router();
 
 function checkPassword(password) {
-	const correctpassword = fse.readFileSync(passwordPath, { encoding: 'base64' });
-	if (correctpassword !== password) {
+	const correctPassword = fse.readFileSync(passwordPath, { encoding: 'utf8' });
+	if (correctPassword !== password) {
 		return false;
 	}
 
@@ -19,6 +19,10 @@ function checkPassword(password) {
 
 function getStaticPath(req, res) {
 	res.status(200).json(require(configJsonPath).staticPath);
+}
+
+function getProductName(req, res) {
+	res.status(200).json(require(configJsonPath).productName);
 }
 
 function confirmStaticPath(req, res) {
@@ -42,6 +46,7 @@ function login(req, res) {
 }
 
 router.get('/config/staticPath', getStaticPath);
+router.get('/config/productName', getProductName);
 
 router.get('/config/previewPath', selectPreviewPath);
 router.put('/config/staticPath', confirmStaticPath);

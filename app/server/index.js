@@ -33,7 +33,6 @@ function removeSocket(socket) {
 function destoryAllSocket() {
 	socketPool.forEach(function(socket, index) {
 		socket.destroy();
-		socketPool.splice(index, 1);
 	});
 }
 
@@ -43,7 +42,7 @@ function restartServer() {
 	server = null;
 
 	const config = require(configJsonPath);
-	server = http.createServer(appFactory(config.staticPath)).listen(config.port);
+	server = http.createServer(appFactory(config.staticPath)).listen(config.httpPort);
 	server.on('connection', socket => {
 		socketPool.push(socket);
 		socket.once('close', () => removeSocket(socket));
