@@ -13,7 +13,7 @@ compiler(resolve(__dirname, 'lemonce.iss'), {
 	'dNameShort=': names[0],
 	'dNameLong=': ProductName,
 	'dNameVersion=': ProductName,
-	'dExeBasename=': names[0],
+	'dExeBasename=': setting.name,
 	'dDirName=': ProductName,
 	'dAppUserId=': names.join('.'),
 	'dVersion=': version,

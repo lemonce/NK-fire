@@ -1,7 +1,7 @@
 'use strict';
 const {resolve} = require('path');
 const packager = require('electron-packager');
-const config = require('../package.json');console.log(config.productName);
+const config = require('../package.json');
 const sharedConf = require('./shared-config.js');
 
 const packageOpts = Object.assign({

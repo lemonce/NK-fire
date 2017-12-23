@@ -25,15 +25,20 @@ function getProductName(req, res) {
 	res.status(200).json(require(configJsonPath).productName);
 }
 
-function confirmStaticPath(req, res) {
-	handler.call('confirm-static-path');
+function setFullscreen(req, res) {
+	handler.call('win.setFullscreen');
 	res.status(200).json('done');
 }
 
 function selectPreviewPath(req, res) {
-	const path = handler.call('select-preview-path');
+	const path = handler.call('win.selectPreviewPath');
 	res.status(200).json(path);
 	handler.call('server.restart');
+}
+
+function cancelFullscreen(req, res) {
+	handler.call('win.cancelFullscreen');
+	res.status(200).json('done');
 }
 
 function login(req, res) {
@@ -49,7 +54,8 @@ router.get('/config/staticPath', getStaticPath);
 router.get('/config/productName', getProductName);
 
 router.get('/config/previewPath', selectPreviewPath);
-router.put('/config/staticPath', confirmStaticPath);
+router.post('/win/fullscreen', setFullscreen);
+router.delete('/win/fullscreen', cancelFullscreen);
 router.post('/login', login);
 
 module.exports = router;

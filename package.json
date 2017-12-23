@@ -40,6 +40,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config build/config/webpack.base.js --progress",
+    "init": "node build/initConfig.js",
     "dev-server": "webpack-dev-server --config build/config/webpack.base.js --hot --host 0.0.0.0",
     "dev": "electron . dev",
     "pack:windows": "npm run build && node packager/win32.js",

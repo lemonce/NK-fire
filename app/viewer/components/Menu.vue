@@ -49,7 +49,7 @@ export default {
 			});
 		},
 		confirm() {
-			return axios.put('/api/config/staticPath');
+			return axios.post('/api/win/fullscreen');
 		}
 	}
 }

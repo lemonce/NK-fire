@@ -121,9 +121,13 @@ app.on('activate', function () {
 	}
 });
 
-handler.define('select-preview-path', selectPath);
+handler.define('win.selectPreviewPath', selectPath);
 
-handler.define('confirm-static-path', function () {
+handler.define('win.setFullscreen', function () {
 	mainWindow.loadURL(staticPage);
 	mainWindow.setFullScreen(true);
+});
+
+handler.define('win.cancelFullscreen', function () {
+	mainWindow.setFullScreen(false);
 });
