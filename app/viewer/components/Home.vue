@@ -9,7 +9,7 @@
 
 		<div class="row" id="password">
 			<div class="col-sm-4 col-sm-offset-4">
-				<div class="input-group">
+				<div class="input-group input-group-lg">
 					<input type="password"
 						class="form-control"
 						v-model="password"
@@ -17,7 +17,7 @@
 						required
 						autofocus>
 					<span class="input-group-btn">
-						<button class="btn btn-info"
+						<button class="btn btn-warning"
 							:disabled="password === ''"
 							@click.prevent="login()"
 							>进入</button>
@@ -25,7 +25,7 @@
 				</div>
 			</div>
 			<div class="col-sm-2">
-				<h3 style="text-align:left; margin:5px 0; color: yellow">{{message}}</h3>
+				<p class="error-message">{{message}}</p>
 			</div>
 		</div>
 		<keyboard
@@ -54,9 +54,8 @@ export default {
 	},
 	methods: {
 		changed(value) {
+			this.message = '';
 			this.password = value;
-
-			console.log('Value ' + value);
 		},
 		login() {
 			axios.post('/api/login', {
@@ -84,34 +83,30 @@ export default {
 	transform: translateY(-50%);
 	text-align: center;
 
-}
-#index #system .vue-keyboard-key {
-	min-width: 100px;
-	font-size: 4rem;
-}                                                      
+	#system .vue-keyboard-key {
+		min-width: 100px;
+		font-size: 4rem;
+	}  
+}                                              
 #title {
-	margin-bottom: 100px;
-	font-size: 60px;
+	margin-bottom: 1rem;
+	font-size: 7rem;
 	transform: translateY(-50%);
-	cursor: pointer;
-	-webkit-transition: color .2s ease-in-out;
-	transition: color .2s ease-in-out;
-	-webkit-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
-			user-select: none;
-	mix-blend-mode: overlay;
-	color: rgba(0, 0, 0, 0.3);
-
-	&:hover {
-		color: rgba(0, 0, 0, 0.8);
-	}
+	color: rgba(255, 255, 255, 0.6);
 }
 #system {
 	padding: 30px;
 
 	#password {
 		margin-bottom: 30px;
+
+		.error-message {
+			margin: 0;
+			font-size: 28px;
+			padding: 3px 0;
+			color: yellow;
+			text-align: left;
+		}
 	}
 }
 </style>

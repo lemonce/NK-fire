@@ -34,6 +34,8 @@
 <script>
 import axios from 'axios';
 
+const reqPath = '/api/config/';
+
 export default {
 	name: 'app-menu',
 	data() {
@@ -43,7 +45,7 @@ export default {
 	},
 	methods: {
 		getPath() {
-			axios.get('/api/config/previewPath').then(({data}) => {
+			axios.get(`${reqPath}previewPath`).then(({data}) => {
 				this.filePath = data;
 				this.$emit('refresh');
 			});
@@ -51,6 +53,11 @@ export default {
 		confirm() {
 			return axios.post('/api/win/fullscreen');
 		}
+	},
+	mounted() {
+		axios.get(`${reqPath}staticPath`).then(({data}) => {
+			this.filePath = data;
+		});
 	}
 }
 </script>

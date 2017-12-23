@@ -176,7 +176,7 @@ render();
 /* MOUSEMOVE */
 'mousemove touchmove'.split(' ').forEach(function (e) {
 	document.addEventListener(e, function (e) {
-		mouseY = e.clientY || e.touches[0].clientY;
+		mouseY = e.clientY;
 	});
 });
 
