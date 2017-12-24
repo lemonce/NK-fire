@@ -59,6 +59,12 @@ function createWindow () {
 			mainWindow.loadURL(staticPage);
 		}
 	});
+
+	webContents.on('before-input-event', (event, input) => {
+		if (input.key === 'F10' && input.type === 'keyDown') {
+			mainWindow.loadURL(`http://localhost:${port}/config/#/config`);
+		}
+	});
 }
 
 function selectPath() {
