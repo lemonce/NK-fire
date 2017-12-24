@@ -124,10 +124,10 @@ app.on('activate', function () {
 handler.define('win.selectPreviewPath', selectPath);
 
 handler.define('win.setFullscreen', function () {
-	mainWindow.loadURL(staticPage);
 	mainWindow.setFullScreen(true);
 });
 
 handler.define('win.cancelFullscreen', function () {
 	mainWindow.setFullScreen(false);
+	mainWindow.loadURL(`http://localhost:${port}/config/#/config`);
 });

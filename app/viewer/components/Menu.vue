@@ -51,7 +51,7 @@ export default {
 			});
 		},
 		confirm() {
-			return axios.post('/api/win/fullscreen');
+			this.$emit('setFullscreen');
 		}
 	},
 	mounted() {
