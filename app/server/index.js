@@ -6,8 +6,9 @@ const http = require('http');
 const router = require('./router');
 
 const handler = require('../handler');
-const cwd = process.cwd();
-const configJsonPath = path.resolve(cwd, 'config.json');
+const { app } = require('electron');
+const appDataPath = app.getPath('appData');
+const configJsonPath = path.resolve(appDataPath, 'Lemonce/config.json');
 const configPagePath = path.resolve(__dirname, '../../dist');
 
 function appFactory(staticPath) {

@@ -4,6 +4,7 @@ export default function initControler() {
 	const preview = document.getElementById('preview').contentWindow;
 
 	let mousedownPool;
+	let watcherId;
 
 	function initMousedownPool() {
 		mousedownPool = {
@@ -16,7 +17,7 @@ export default function initControler() {
 		return initMousedownPool;
 	}
 
-	setInterval(initMousedownPool(), 10000);
+	initMousedownPool();
 
 	preview.addEventListener('mousedown', event => {
 		const { screenX: x, screenY: y } = event;
@@ -42,6 +43,9 @@ export default function initControler() {
 		} else {
 			initMousedownPool();
 		}
+
+		clearTimeout(watcherId);
+		watcherId = setTimeout(initMousedownPool, 10000);
 
 		console.log(mousedownPool);
 

@@ -9,9 +9,10 @@ const { app, dialog, BrowserWindow } = electron;
 
 const handler = require('../handler');
 const cwd = process.cwd();
-const configJsonPath = path.resolve(cwd, 'config.json');
+const appDataPath = app.getPath('appData');
+const configJsonPath = path.resolve(appDataPath, 'Lemonce/config.json');
 const configPagePath = path.resolve(__dirname, '../../dist');
-const passwordPath = path.resolve(cwd, 'ldslib.dll');
+const passwordPath = path.resolve(appDataPath, 'Lemonce/ldslib.dll');
 
 function checkFiles() {
 	if (!fse.existsSync(configJsonPath)) {
